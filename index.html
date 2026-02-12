@@ -215,27 +215,22 @@ button {
 </head>
 <body>
 
-<!-- First screen -->
 <div id="questionScreen">
   <h1>Hi Andrea Ylaissa Tandoc Calicdan <br> Will You Be My Valentine? 💖</h1>
   <button id="yesBtn">Yes 💘</button>
   <button id="noBtn">No 💔</button>
 
-  <!-- Background hearts -->
   <div class="heart-bg" style="left:5%; animation-duration: 6s;">💖</div>
   <div class="heart-bg" style="left:25%; animation-duration: 5s;">💗</div>
   <div class="heart-bg" style="left:50%; animation-duration: 7s;">💘</div>
   <div class="heart-bg" style="left:75%; animation-duration: 6.5s;">💞</div>
   <div class="heart-bg" style="left:90%; animation-duration: 5.5s;">💕</div>
 
-  <!-- Sparkles -->
   <div class="sparkle" style="top:20%; left:10%;">✨</div>
   <div class="sparkle" style="top:40%; left:60%;">💫</div>
   <div class="sparkle" style="top:70%; left:30%;">✨</div>
 </div>
 
-
-<!-- Envelope screen -->
 <div id="envelopeScreen">
   <div class="wrapper" id="envelopeWrapper">
     <div class="lid one"></div>
@@ -254,14 +249,27 @@ const envelopeScreen = document.getElementById('envelopeScreen');
 const envelopeWrapper = document.getElementById('envelopeWrapper');
 const letterText = document.getElementById('letterText');
 
-/* Move No button */
+/* Move No button slightly */
 function moveNo() {
-  const maxX = window.innerWidth - noBtn.offsetWidth;
-  const maxY = window.innerHeight - noBtn.offsetHeight;
-  noBtn.style.left = Math.random() * maxX + "px";
-  noBtn.style.top = Math.random() * maxY + "px";
+  const currentLeft = noBtn.offsetLeft;
+  const currentTop = noBtn.offsetTop;
+  
+  let randomX = currentLeft + (Math.random() * 200 - 100); // ±100px
+  let randomY = currentTop + (Math.random() * 200 - 100);
+
+  randomX = Math.max(0, Math.min(window.innerWidth - noBtn.offsetWidth, randomX));
+  randomY = Math.max(0, Math.min(window.innerHeight - noBtn.offsetHeight, randomY));
+
+  noBtn.style.left = randomX + "px";
+  noBtn.style.top = randomY + "px";
 }
+
+// Move when hovering
 noBtn.addEventListener("mouseenter", moveNo);
+
+// Move when clicking
+noBtn.addEventListener("click", moveNo);
+
 
 /* Yes click */
 yesBtn.addEventListener("click", () => {
