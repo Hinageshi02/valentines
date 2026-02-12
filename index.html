@@ -263,67 +263,52 @@ const envelopeScreen = document.getElementById('envelopeScreen');
 const envelopeWrapper = document.getElementById('envelopeWrapper');
 const letterText = document.getElementById('letterText');
 
-/* Move No button slightly */
+/* Track button position for random moves */
 function moveNo() {
   const currentLeft = noBtn.offsetLeft;
   const currentTop = noBtn.offsetTop;
-  
-  let randomX = currentLeft + (Math.random() * 200 - 100); // ±100px
+
+  // Move ±100px from current position
+  let randomX = currentLeft + (Math.random() * 200 - 100);
   let randomY = currentTop + (Math.random() * 200 - 100);
 
+  // Keep inside viewport
   randomX = Math.max(0, Math.min(window.innerWidth - noBtn.offsetWidth, randomX));
   randomY = Math.max(0, Math.min(window.innerHeight - noBtn.offsetHeight, randomY));
 
   noBtn.style.left = randomX + "px";
   noBtn.style.top = randomY + "px";
+
+  // Add bounce animation
+  noBtn.classList.remove("bounce");   // Reset animation
+  void noBtn.offsetWidth;              // Trigger reflow
+  noBtn.classList.add("bounce");       // Play bounce
 }
 
-// Move when hovering
+// Move on hover AND click
 noBtn.addEventListener("mouseenter", moveNo);
-
-// Move when clicking
 noBtn.addEventListener("click", moveNo);
-
 
 /* Yes click */
 yesBtn.addEventListener("click", () => {
-  questionScreen.style.display="none";
-  envelopeScreen.style.display="flex";
+  questionScreen.style.display = "none";
+  envelopeScreen.style.display = "flex";
   startHeartRain();
 });
 
-let lastNoX = 0;
-let lastNoY = 0;
-
-function moveNo() {
+/* Keep No button inside viewport on resize */
+window.addEventListener("resize", () => {
   const maxX = window.innerWidth - noBtn.offsetWidth;
   const maxY = window.innerHeight - noBtn.offsetHeight;
 
-  let newX, newY;
+  let currentX = noBtn.offsetLeft;
+  let currentY = noBtn.offsetTop;
 
-  // Make sure new position is at least 50px away from last
-  do {
-    newX = Math.random() * maxX;
-    newY = Math.random() * maxY;
-  } while (Math.abs(newX - lastNoX) < 50 && Math.abs(newY - lastNoY) < 50);
+  if (currentX > maxX) noBtn.style.left = maxX + "px";
+  if (currentY > maxY) noBtn.style.top = maxY + "px";
+});
 
-  noBtn.style.left = newX + "px";
-  noBtn.style.top = newY + "px";
 
-  lastNoX = newX;
-  lastNoY = newY;
-
-  // Add bounce animation
-  noBtn.classList.remove("bounce");       // Reset animation
-  void noBtn.offsetWidth;                 // Trigger reflow
-  noBtn.classList.add("bounce");          // Play animation
-}
-
-// Move when hovering
-noBtn.addEventListener("mouseenter", moveNo);
-
-// Move when clicking
-noBtn.addEventListener("click", moveNo);
 
 
 /* Heart rain */
