@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Be My Valentine 💖</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body and background */
+body {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Comic Sans MS', cursive, 'Georgia', serif;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  overflow: hidden;
+  flex-direction: column;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+}
+
+/* Add cute floating hearts in the background */
+@keyframes floatHeart {
+  0% { transform: translateY(100vh) scale(0.8); opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+}
+
+.heart-bg {
+  position: absolute;
+  font-size: clamp(12px, 3vw, 28px);
+  animation: floatHeart linear infinite;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* Question screen styles */
+#questionScreen {
+  color: white;
+  position: relative;
+  z-index: 2;
+}
+
+/* Heading */
+#questionScreen h1 {
+  font-size: clamp(28px, 6vw, 42px);
+  margin-bottom: 30px;
+  text-shadow: 
+    0 0 10px rgba(255, 0, 102, 0.8), 
+    0 0 20px rgba(255, 128, 178, 0.5),
+    0 0 30px rgba(255, 200, 220, 0.3);
+  line-height: 1.3;
+}
+
+/* Buttons */
+button {
+  padding: 12px 30px;
+  font-size: clamp(14px, 2vw, 18px);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  margin: 10px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(255, 0, 102, 0.4);
+}
+
+/* Yes button gradient */
+#yesBtn {
+  background: linear-gradient(45deg, #ff4e8b, #ff87b2);
+  color: white;
+  text-shadow: 0 0 5px #fff;
+}
+#yesBtn:hover {
+  transform: scale(1.15) rotate(-2deg);
+  box-shadow: 0 8px 25px rgba(255, 0, 102, 0.6);
+}
+
+/* No button gradient */
+#noBtn {
+  background: linear-gradient(45deg, #fff, #ffe1e6);
+  color: #ff4e8b;
+  position: absolute;
+  text-shadow: 0 0 3px #ff4e8b;
+  box-shadow: 0 5px 15px rgba(255, 0, 102, 0.3);
+}
+
+/* Sparkle animation on the screen */
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0.8) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.2) rotate(20deg); }
+}
+
+.sparkle {
+  position: absolute;
+  font-size: clamp(8px, 2vw, 20px);
+  color: #fff;
+  animation: sparkle 2s infinite;
+  pointer-events: none;
+}
+
+
+/* Heart rain */
+.heart {
+  position: fixed;
+  top: -10px;
+  font-size: clamp(16px, 2vw, 22px);
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to { transform: translateY(110vh); opacity:0; }
+}
+
+/* Envelope screen */
+#envelopeScreen { display:none; flex-direction:column; align-items:center; position:relative; }
+
+/* Envelope wrapper */
+.wrapper {
+  height: 200px;
+  width: 300px;
+  background-color: #3760C9;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 10;
+  cursor: pointer;
+  transition: opacity 0.5s ease;
+}
+
+/* Envelope lids */
+.lid {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0; left: 0;
+  border-right: 150px solid transparent;
+  border-bottom: 100px solid transparent;
+  border-left: 150px solid transparent;
+  transform-origin: top;
+  transition: transform 0.5s ease;
+}
+
+.lid.one { border-top: 100px solid #658ced; transform: rotateX(0deg); z-index:3; }
+.lid.two { border-top: 100px solid #3760C9; transform: rotateX(0deg); z-index:1; }
+
+/* Envelope body */
+.envelope {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0; left:0;
+  border-top:100px solid transparent;
+  border-right:150px solid #C4DFF0;
+  border-bottom:100px solid #C4DFF0;
+  border-left:150px solid #a4d4f2;
+  z-index:2;
+  border-radius:5px;
+}
+
+/* Paper letter */
+.paper {
+  position: absolute;
+  top:50%;
+  left:50%;
+  width: 90%;
+  max-width: 350px;
+  height: 70vh;
+  max-height: 400px;
+  background-color: #fffdf5;
+  border-radius:10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  font-size: clamp(14px, 2vw, 18px);
+  line-height:1.5;
+  color:#3B4049;
+  text-align:left;
+  z-index:5;
+  transition: left 1s ease, top 1s ease, transform 1s ease, opacity 1s ease;
+  overflow-y:auto;
+  opacity:0;
+}
+
+/* Instruction text */
+.instruction {
+  color:white;
+  font-size: clamp(14px, 2vw, 18px);
+  margin-top:20px;
+  text-align:center;
+}
+
+/* Media Queries for smaller devices */
+@media (max-width: 500px) {
+  .wrapper {
+    width: 90%;
+  }
+  #noBtn {
+    padding: 8px 15px;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<!-- First screen -->
+<div id="questionScreen">
+  <h1>Hi Andrea Ylaissa Tandoc Calicdan <br> Will You Be My Valentine? 💖</h1>
+  <button id="yesBtn">Yes 💘</button>
+  <button id="noBtn">No 💔</button>
+
+  <!-- Background hearts -->
+  <div class="heart-bg" style="left:5%; animation-duration: 6s;">💖</div>
+  <div class="heart-bg" style="left:25%; animation-duration: 5s;">💗</div>
+  <div class="heart-bg" style="left:50%; animation-duration: 7s;">💘</div>
+  <div class="heart-bg" style="left:75%; animation-duration: 6.5s;">💞</div>
+  <div class="heart-bg" style="left:90%; animation-duration: 5.5s;">💕</div>
+
+  <!-- Sparkles -->
+  <div class="sparkle" style="top:20%; left:10%;">✨</div>
+  <div class="sparkle" style="top:40%; left:60%;">💫</div>
+  <div class="sparkle" style="top:70%; left:30%;">✨</div>
+</div>
+
+
+<!-- Envelope screen -->
+<div id="envelopeScreen">
+  <div class="wrapper" id="envelopeWrapper">
+    <div class="lid one"></div>
+    <div class="lid two"></div>
+    <div class="envelope"></div>
+  </div>
+  <div class="paper" id="letterText"></div>
+  <div class="instruction">Click the envelope 💌</div>
+</div>
+
+<script>
+const questionScreen = document.getElementById('questionScreen');
+const yesBtn = document.getElementById('yesBtn');
+const noBtn = document.getElementById('noBtn');
+const envelopeScreen = document.getElementById('envelopeScreen');
+const envelopeWrapper = document.getElementById('envelopeWrapper');
+const letterText = document.getElementById('letterText');
+
+/* Move No button */
+function moveNo() {
+  const maxX = window.innerWidth - noBtn.offsetWidth;
+  const maxY = window.innerHeight - noBtn.offsetHeight;
+  noBtn.style.left = Math.random() * maxX + "px";
+  noBtn.style.top = Math.random() * maxY + "px";
+}
+noBtn.addEventListener("mouseenter", moveNo);
+
+/* Yes click */
+yesBtn.addEventListener("click", () => {
+  questionScreen.style.display="none";
+  envelopeScreen.style.display="flex";
+  startHeartRain();
+});
+
+/* Heart rain */
+function startHeartRain() {
+  setInterval(()=>{
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.innerHTML = '💖';
+    heart.style.left = Math.random()*100 + 'vw';
+    heart.style.animationDuration = (3+Math.random()*2)+'s';
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),5000);
+  },300);
+}
+
+/* Typewriter letter */
+const message = `Hi my Pretty Eyabii <3,
+
+Mark your calendar po hihi, February 14, 2026.
+Thank you so much po for always being there with me baby,
+through ups and down nandyan ka for me
+You always make my days feel special.
+And you are always there for me.
+Your presence makes my heart race
+in ways I cannot explain. Sana ay di ka mag bago
+
+Today, I just want to say
+
+I choose you.
+I cherish you.
+And I love you baby.
+
+Nandito lang ako lagi! 💖`;
+
+let i=0;
+function typeWriter() {
+  if(i<message.length){
+    letterText.innerHTML += message.charAt(i);
+    i++;
+    setTimeout(typeWriter,40);
+  }
+}
+
+/* Click envelope */
+envelopeWrapper.addEventListener('click', ()=>{
+  // open lids
+  envelopeWrapper.querySelector('.lid.one').style.transform = "rotateX(90deg)";
+  envelopeWrapper.querySelector('.lid.two').style.transform = "rotateX(180deg)";
+  
+  // fade out envelope
+  envelopeWrapper.style.opacity = 0;
+  
+  // show and slide paper
+  letterText.style.opacity = 1;
+  letterText.style.left = "50px"; // slide to left side
+  letterText.style.transform = "translateY(-50%)";
+  
+  // start typewriter
+  setTimeout(typeWriter,500);
+});
+</script>
+</body>
+</html>
