@@ -210,6 +210,20 @@ button {
     padding: 8px 15px;
   }
 }
+
+/* Bounce animation for No button */
+@keyframes bounce {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.2) translateY(-5px); }
+  50% { transform: scale(0.9) translateY(2px); }
+  75% { transform: scale(1.1) translateY(-2px); }
+  100% { transform: scale(1); }
+}
+
+.bounce {
+  animation: bounce 0.4s ease;
+}
+
 </style>
 
 </head>
@@ -277,6 +291,40 @@ yesBtn.addEventListener("click", () => {
   envelopeScreen.style.display="flex";
   startHeartRain();
 });
+
+let lastNoX = 0;
+let lastNoY = 0;
+
+function moveNo() {
+  const maxX = window.innerWidth - noBtn.offsetWidth;
+  const maxY = window.innerHeight - noBtn.offsetHeight;
+
+  let newX, newY;
+
+  // Make sure new position is at least 50px away from last
+  do {
+    newX = Math.random() * maxX;
+    newY = Math.random() * maxY;
+  } while (Math.abs(newX - lastNoX) < 50 && Math.abs(newY - lastNoY) < 50);
+
+  noBtn.style.left = newX + "px";
+  noBtn.style.top = newY + "px";
+
+  lastNoX = newX;
+  lastNoY = newY;
+
+  // Add bounce animation
+  noBtn.classList.remove("bounce");       // Reset animation
+  void noBtn.offsetWidth;                 // Trigger reflow
+  noBtn.classList.add("bounce");          // Play animation
+}
+
+// Move when hovering
+noBtn.addEventListener("mouseenter", moveNo);
+
+// Move when clicking
+noBtn.addEventListener("click", moveNo);
+
 
 /* Heart rain */
 function startHeartRain() {
